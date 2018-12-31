@@ -1,0 +1,14 @@
+{
+  "name": "multi-get-client",
+  "version": "1.0.0",
+  "description": "A client to request a URL resource in chunks.",
+  "main": "multiGet.js",
+  "author": "Salman Oskooi <soskooi@gmail.com>",
+  "private": true,
+  "license": "MIT",
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Salmonster/MultiGet"
+  }
+}
