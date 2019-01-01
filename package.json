@@ -6,7 +6,9 @@
   "author": "Salman Oskooi <soskooi@gmail.com>",
   "private": true,
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "pkg": "^4.3.5"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Salmonster/MultiGet"

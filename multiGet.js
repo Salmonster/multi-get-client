@@ -9,8 +9,20 @@ const resourceUrl = process.argv[2];
 
 
 function validateUsage() {
-    const usageMessage =
-        `Usage:\n\tnode multiGet.js URL [FILE]\n\t\u00A0` +
+    let execPath;
+    // Check which type of client is being used to set the right usage message.
+    if (/linux/.test(process.execPath)) {
+        execPath = './multiGet-linux';
+    } else if (/macos/.test(process.execPath)) {
+        execPath = './multiGet-macos';
+    } else if (/win/.test(process.execPath)) {
+        execPath = 'start "" "C:\\path\\to\\multiGet-win.exe"';
+    } else {
+        // Default to Node.js instructions.
+        execPath = 'node multiGet.js';
+    }
+    let usageMessage =
+        `Usage:\n\t${execPath} URL [FILE]\n\t\u00A0` +
         `Optionally write output to <FILE> instead of default`;
 
     // If there's no url, or too many arguments, inform user of proper usage.
@@ -18,12 +30,11 @@ function validateUsage() {
         console.log(usageMessage);
         // Similar misuse of other CLI tools exit with success, so we'll follow suit.
         process.exit(0);
-    }
     // If the url isn't an http address, quit early. If it's still an
     // invalid url then we'll return the error message from querying it later.
-    else if (!resourceUrl.startsWith('http://')) {
+    } else if (!resourceUrl.startsWith('http://')) {
         // Print errors to stderr.
-        console.error(`[ERROR] Invalid url: ${process.argv[2]}`);
+        console.error(`[ERROR] Invalid url: ${resourceUrl}`);
         process.exit(1);
     }
 }
@@ -79,7 +90,7 @@ function getUrlAndStoreData() {
             }
 
             res.on('data', (buffer) => {
-                // Binary data is received as a stream of smaller buffer objects.
+                // Binary data is received as a stream of buffer objects.
                 // Add them to our temporary array for this request.
                 dataBuffers.push(buffer);
             });
@@ -94,7 +105,7 @@ function getUrlAndStoreData() {
                 // Mark the end of a successful download...
                 console.log('.');
                 chunkMeter++;
-                if (chunkMeter === 4) {
+                if (chunkMeter === chunkCount) {
                     try {
                         const chunksBuffer = Buffer.concat(chunks);
                         // Using an 'fs' stream object wasn't working as expected and there's a lack of
